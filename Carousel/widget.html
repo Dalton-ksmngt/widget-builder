@@ -9,19 +9,15 @@
         let productCount =  parseInt({{products_per_row}});
         let productsToGrab = pageCount * productRows * productCount;
         let rowContainer = container.appendChild(document.createElement("div"));
-        let rowNumber = 1;
-        rowContainer.classList.add("row"+ rowNumber);
-        rowContainer.classList.add("row");
+        rowContainer.classList.add("productCarouselItem");
         response.text().then(response => {
             doc = parser.parseFromString(response, "text/html");
             let productCards = doc.querySelectorAll("li.product");
             productCards.forEach((element,index) => {
                 if(index >= productsToGrab) return;
-                if(productCount * rowNumber - index == 0) {
-                    rowNumber++;
+                if(index > 0 && index%2==0) {
                     rowContainer = container.appendChild(document.createElement("div"));
-                    rowContainer.classList.add("row"+ rowNumber);
-                    rowContainer.classList.add("row");
+                    rowContainer.classList.add("productCarouselItem");
                 }
                 rowContainer.appendChild(element);
             });
@@ -31,9 +27,9 @@
 </script>
 <style>
 
-        .productCarouselGrid {
+        .productCarousel {
             display:flex;
-            flex-direction: column;
+            flex-direction: row;
             overflow:hidden;
             list-style: none;
             margin:0;
@@ -65,13 +61,13 @@
                 }
             }
 
-            .row {
+            .productCarouselItem {
                 display:flex;
-                flex-direction:row;
+                flex-direction:column;
             }
         }
 
-        .productCarouselGrid--maxCol4{grid-template-columns: 1fr 1fr 1fr 1fr;}
+        .productCarousel--maxCol4{grid-template-columns: 1fr 1fr 1fr 1fr;}
     
         #bc-simple-text-{{_.id}} {
             
@@ -93,7 +89,7 @@
         <div class="container">
             <div class="product-carousel-tabs">
                 {{#each tabs}}
-                <ul class="productCarouselGrid productCarouselGrid--maxCol{{{../products_per_row}}} " data-tab-name="{{tab_label}}">
+                <ul class="productCarousel productCarousel--maxCol{{{../products_per_row}}} " data-tab-name="{{tab_label}}">
 
                 </ul>
                 {{/each}}
