@@ -1,0 +1,117 @@
+<script>
+    if(!GetCarouselProducts)
+    var GetCarouselProducts = async function GetCarouselProducts(page_url, container) {
+        const response = await fetch(page_url);
+        let parser = new DOMParser();
+        let doc;
+        let pageCount = parseInt({{page_count}});
+        let productRows = parseInt({{product_rows}});
+        let productCount =  parseInt({{products_per_row}});
+        let productsToGrab = pageCount * productRows * productCount;
+        let rowContainer = container.appendChild(document.createElement("div"));
+        let rowNumber = 1;
+        rowContainer.classList.add("row"+ rowNumber);
+        rowContainer.classList.add("row");
+        response.text().then(response => {
+            doc = parser.parseFromString(response, "text/html");
+            let productCards = doc.querySelectorAll("li.product");
+            productCards.forEach((element,index) => {
+                if(index >= productsToGrab) return;
+                if(productCount * rowNumber - index == 0) {
+                    rowNumber++;
+                    rowContainer = container.appendChild(document.createElement("div"));
+                    rowContainer.classList.add("row"+ rowNumber);
+                    rowContainer.classList.add("row");
+                }
+                rowContainer.appendChild(element);
+            });
+        });
+
+    };
+</script>
+<style>
+
+        .productCarouselGrid {
+            display:flex;
+            flex-direction: column;
+            overflow:hidden;
+            list-style: none;
+            margin:0;
+
+            > li {
+                order:1;
+                &:nth-child(even) {
+                    order:2;
+                }
+            }
+
+            .product {
+                padding: 0 .75rem 0 .75rem;
+                
+
+                .card {
+                    align-content: normal;
+                    margin:0;
+                    height:100%;
+                    padding: .75rem;
+
+                    .card-buttons, .button {
+                        background: none;
+                        color: #1e2d7d;
+                        &:hover {
+                            color: #408b87;
+                        }
+                    }
+                }
+            }
+
+            .row {
+                display:flex;
+                flex-direction:row;
+            }
+        }
+
+        .productCarouselGrid--maxCol4{grid-template-columns: 1fr 1fr 1fr 1fr;}
+    
+        #bc-simple-text-{{_.id}} {
+            
+        }
+        
+        #widget-template-title {
+            text-transform: capitalize;
+            text-align: center;
+        }
+    </style>
+    
+    <h1 id='widget-template-title'>Carousel</h1>
+    <div id="product-carousel-{{_.id}}">
+        <div class="product-carousel-navbar">
+            {{#each tabs}}
+                {{tab_label}}
+            {{/each}}
+        </div>
+        <div class="container">
+            <div class="product-carousel-tabs">
+                {{#each tabs}}
+                <ul class="productCarouselGrid productCarouselGrid--maxCol{{{../products_per_row}}} " data-tab-name="{{tab_label}}">
+
+                </ul>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <script>
+        let tabContainer = null;
+        function setTabContent(tab_label, page_url) {
+            if(tabContainer === null) {
+                tabContainer = document.querySelector("#product-carousel-{{_.id}} .product-carousel-tabs [data-tab-name=\""+tab_label+"\"]");
+                setTimeout(setTabContent,100,tab_label, page_url);
+            }
+            else GetCarouselProducts(page_url,tabContainer);
+        }
+            {{#each tabs}}
+                setTabContent("{{tab_label}}", "{{page_url}}");
+                tabContainer = null;
+            {{/each}}
+    </script>
+

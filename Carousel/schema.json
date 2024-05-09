@@ -1,0 +1,61 @@
+[
+  {
+    "type": "array",
+    "label": "Carousel Tabs",
+    "id": "tabs",
+    "defaultCount": 1,
+    "entryLabel": "Tab",
+    "schema": [
+      {
+        "type": "tab",
+        "label": "Design",
+        "sections": [
+          {
+            "settings": [
+              {
+                "type": "input",
+                "id": "page_url",
+                "label": "Page URL",
+                "default": "https://e-town-marketing-distributing-sandbox-1.mybigcommerce.com/hide-from-new-products/"
+              },
+              {
+                "type": "input",
+                "id": "tab_label",
+                "label": "Tab Name",
+                "default": "Default"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "tab",
+    "label": "Design",
+    "sections": [
+      {
+        "settings": [
+          {
+            "type": "input",
+            "id": "page_count",
+            "label": "Number of pages",
+            "default": 1
+          },
+          {
+            "type": "input",
+            "id": "products_per_row",
+            "label": "Products per row",
+            "default": 4
+          },
+          {
+            "type": "input",
+            "id": "product_rows",
+            "label": "Product rows",
+            "default": 2
+          }
+        ]
+      }
+    ]
+  }
+]
