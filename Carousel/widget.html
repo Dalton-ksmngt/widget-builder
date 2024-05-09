@@ -27,19 +27,13 @@
 </script>
 <style>
 
-        .productCarousel {
+        .productCarouselTab {
             display:flex;
             flex-direction: row;
             overflow:hidden;
             list-style: none;
             margin:0;
-
-            > li {
-                order:1;
-                &:nth-child(even) {
-                    order:2;
-                }
-            }
+            min-width:100%;
 
             .product {
                 padding: 0 .75rem 0 .75rem;
@@ -64,8 +58,15 @@
             .productCarouselItem {
                 display:flex;
                 flex-direction:column;
+                min-height:100%;
+
+                li {
+                    min-height:50%;
+                }
             }
         }
+
+        .productCarousel .container {padding:0;}
 
         .productCarousel--maxCol4 .productCarouselItem{
             min-width:25%;
@@ -82,7 +83,7 @@
     </style>
     
     <h1 id='widget-template-title'>Carousel</h1>
-    <div id="product-carousel-{{_.id}}">
+    <div id="product-carousel-{{_.id}}" class="productCarousel--maxCol{{{products_per_row}}} productCarousel">
         <div class="product-carousel-navbar">
             {{#each tabs}}
                 {{tab_label}}
@@ -91,7 +92,7 @@
         <div class="container">
             <div class="product-carousel-tabs">
                 {{#each tabs}}
-                <ul class="productCarousel productCarousel--maxCol{{{../products_per_row}}} " data-tab-name="{{tab_label}}">
+                <ul class="productCarouselTab" data-tab-name="{{tab_label}}">
 
                 </ul>
                 {{/each}}
