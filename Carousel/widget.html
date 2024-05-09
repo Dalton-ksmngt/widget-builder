@@ -8,18 +8,18 @@
         let productRows = parseInt({{product_rows}});
         let productCount =  parseInt({{products_per_row}});
         let productsToGrab = pageCount * productRows * productCount;
-        let rowContainer = container.appendChild(document.createElement("div"));
-        rowContainer.classList.add("productCarouselItem");
+        let currentContainer = container.appendChild(document.createElement("div"));
+        currentContainer.classList.add("productCarouselItem");
         response.text().then(response => {
             doc = parser.parseFromString(response, "text/html");
             let productCards = doc.querySelectorAll("li.product");
             productCards.forEach((element,index) => {
                 if(index >= productsToGrab) return;
                 if(index > 0 && index%2==0) {
-                    rowContainer = container.appendChild(document.createElement("div"));
-                    rowContainer.classList.add("productCarouselItem");
+                    currentContainer = container.appendChild(document.createElement("div"));
+                    currentContainer.classList.add("productCarouselItem");
                 }
-                rowContainer.appendChild(element);
+                currentContainer.appendChild(element);
             });
         });
 
@@ -67,7 +67,9 @@
             }
         }
 
-        .productCarousel--maxCol4{grid-template-columns: 1fr 1fr 1fr 1fr;}
+        .productCarousel--maxCol4 .productCarouselItem{
+            min-width:25%;
+        }
     
         #bc-simple-text-{{_.id}} {
             
