@@ -1,36 +1,114 @@
 <script>
     if(!GetCarouselProducts)
     var GetCarouselProducts = async function GetCarouselProducts(page_url, container) {
-        const response = await fetch(page_url);
         let parser = new DOMParser();
         let doc;
         let pageCount = parseInt({{page_count}});
         let productRows = parseInt({{product_rows}});
         let productCount =  parseInt({{products_per_row}});
+        let scrollCount =  parseInt({{product_scroll}});
         let productsToGrab = pageCount * productRows * productCount;
-        let currentContainer = container.appendChild(document.createElement("div"));
-        currentContainer.classList.add("productCarouselItem");
+        const response = await fetch(page_url+`?limit=${productsToGrab}`);
         response.text().then(response => {
             doc = parser.parseFromString(response, "text/html");
             let productCards = doc.querySelectorAll("li.product");
             productCards.forEach((element,index) => {
                 if(index >= productsToGrab) return;
-                if(index > 0 && index%2==0) {
-                    currentContainer = container.appendChild(document.createElement("div"));
-                    currentContainer.classList.add("productCarouselItem");
-                }
-                currentContainer.appendChild(element);
+                container.appendChild(element);
             });
+        }).then(reponse => {
+            container.setAttribute("data-slick",`{
+                "slidesToShow":${productCount}, 
+                "slidesToScroll":${scrollCount}, 
+                "rows":${productRows},
+                "responsive":[
+                    {
+                        "breakpoint": 800,
+                        "settings": {
+                            "slidesToShow":${productCount/3}
+                        }
+                    }
+                ]
+            }`);
+            jsContext.slick(container);
         });
 
     };
+    if(!setTabContent)
+    var setTabContent = function setTabContent(tab_label, page_url, widgetId) {
+        tabContainer = document.querySelector(`#product-carousel-${widgetId} .productCarouselTabs [data-tab-name="${tab_label}"]`);
+        GetCarouselProducts(page_url,tabContainer);
+        let tabsContainer = document.querySelector(`#product-carousel-${widgetId} .productCarouselTabs`);
+        initializeVisibility(tabsContainer);
+        bindTabButtons(widgetId, tabsContainer.querySelector(".productCarouselTab"));
+    }
+    if(!initializeVisibility)
+    var initializeVisibility = function initializeVisibility(carouselTabsContainer) {
+        let tabs = 0;
+        carouselTabsContainer.childNodes.forEach((child,index) => {
+            if(child.tagName === undefined) return;
+            if(child.tagName === "SCRIPT") {
+                child.remove();
+                return;
+            }
+            if(child.tagName === "UL" && tabs == 0) {
+                child.classList.remove("hidden");
+                tabs++;
+            }
+        });
+    }
+    if(!bindTabButtons)
+    var bindTabButtons = function bindTabButtons(widgetId, tabs) {
+        let tabButtons = document.querySelectorAll(`#product-carousel-${widgetId} .productCarouselNavbar .carouselTabButton`);
+        tabButtons.forEach(button => {
+            button.addEventListener("click",setActiveTab);
+        });
+    }
+    if(!setActiveTab)
+    var setActiveTab = function setActiveTab(event) {
+        let tabs = event.currentTarget.parentNode.parentNode.querySelectorAll(`.productCarouselTab`);
+        console.log(tabs);
+        tabs.forEach(tab => {
+            if(tab.getAttribute("data-tab-name") === event.currentTarget.getAttribute("data-tab-name")) {
+                tab.classList.remove("hidden");
+            } else {
+                tab.classList.add("hidden");
+            }
+        });
+    }
 </script>
+    
+    <h1 class="productCarouselTitle" style="font-size:{{title_font_size.value}}px;">{{carousel_title}}</h1>
+    <h2 class="productCarouselSubheader" style="font-size:{{subheader_font_size.value}}px;">{{carousel_subheader}}</h2>
+    <div id="product-carousel-{{_.id}}" class="productCarousel--maxCol{{{products_per_row}}} productCarousel">
+        <div class="container">
+            <div class="productCarouselNavbar">
+                {{#each tabs}}
+                    <div class="carouselTabButton" data-tab-name="{{tab_label}}">{{tab_label}}</div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="container">
+            <div class="productCarouselTabs">
+                {{#each tabs}}
+                <ul class="productCarouselTab hidden" data-tab-name="{{tab_label}}">
+
+                </ul>
+                <script>//setTabContent("{{tab_label}}", "{{page_url}}", "{{../_.id}}");</script>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+    </script>
+
 <style>
 
         .productCarouselTab {
             display:flex;
             flex-direction: row;
-            overflow:hidden;
             list-style: none;
             margin:0;
             min-width:100%;
@@ -66,51 +144,76 @@
             }
         }
 
-        .productCarousel .container {padding:0;}
+        .productCarouselTab .slick-prev {
+            left: -30px !important;
+        }
 
-        .productCarousel--maxCol4 .productCarouselItem{
-            min-width:25%;
+        .productCarouselTab .slick-next {
+            right: -30px !important;
+        }
+
+        .productCarouselTab .slick-list {
+            display:flex;
+        }
+
+        .productCarouselTab.hidden {
+            display:none !important;
         }
     
-        #bc-simple-text-{{_.id}} {
-            
-        }
-        
-        #widget-template-title {
-            text-transform: capitalize;
+    .productCarouselNavbar {
+        display:flex;
+        flex-direction:row;
+        justify-content: left;
+        margin: 0 0 25px 0;
+
+        .carouselTabButton {
             text-align: center;
-        }
-    </style>
-    
-    <h1 id='widget-template-title'>Carousel</h1>
-    <div id="product-carousel-{{_.id}}" class="productCarousel--maxCol{{{products_per_row}}} productCarousel">
-        <div class="product-carousel-navbar">
-            {{#each tabs}}
-                {{tab_label}}
-            {{/each}}
-        </div>
-        <div class="container">
-            <div class="product-carousel-tabs">
-                {{#each tabs}}
-                <ul class="productCarouselTab" data-tab-name="{{tab_label}}">
+            width:20%;
+            height:30px;
+            border: 1px solid black;
+            border-radius:20px;
+            margin: 25px 25px;
+            background-color: #363636;
+            color:white;
 
-                </ul>
-                {{/each}}
-            </div>
-        </div>
-    </div>
-    <script>
-        let tabContainer = null;
-        function setTabContent(tab_label, page_url) {
-            if(tabContainer === null) {
-                tabContainer = document.querySelector("#product-carousel-{{_.id}} .product-carousel-tabs [data-tab-name=\""+tab_label+"\"]");
-                setTimeout(setTabContent,100,tab_label, page_url);
+            &:hover {
+                cursor: pointer;
+                background-color: #263178;
+                animation: carouselNavbarButtonAnimation;
+                animation-duration: .5s;
+                animation-fill-mode: forwards;
             }
-            else GetCarouselProducts(page_url,tabContainer);
         }
-            {{#each tabs}}
-                setTabContent("{{tab_label}}", "{{page_url}}");
-                tabContainer = null;
-            {{/each}}
-    </script>
 
+    }
+
+    .productCarouselTitle {
+        text-align:center;
+        margin: 2rem auto 2rem;
+    }
+
+    .productCarousel {
+        .container {
+            border:none;
+        }
+    }
+
+    .productCarouselSubheader {
+        text-align:center;
+    }
+
+    #product-carousel-{{_.id}} {
+        .slick-slide > div {
+            height:calc(100%/{{product_rows}});
+
+            .product {
+                height:100%;
+            }
+        }
+    }
+
+    @keyframes carouselNavbarButtonAnimation {
+        0% {transform:translateY(0px)}
+        100% {transform:translateY(-5px)}
+    }
+</style>
