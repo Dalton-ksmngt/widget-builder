@@ -1,6 +1,6 @@
 <script>
     if(!GetCarouselProducts)
-    var GetCarouselProducts = async function GetCarouselProducts(page_url, container, sort_by) {
+    var GetCarouselProducts = async function GetCarouselProducts(page_url, container) {
         let parser = new DOMParser();
         let doc;
         let pageCount = parseInt({{page_count}});
@@ -8,7 +8,7 @@
         let productCount =  parseInt({{products_per_row}});
         let scrollCount =  parseInt({{product_scroll}});
         let productsToGrab = pageCount * productRows * productCount;
-        const response = await fetch(page_url+`?limit=${productsToGrab}&sort=${sort_by}`);
+        const response = await fetch(page_url+`?limit=${productsToGrab}`);
         return await response.text().then(response => {
             doc = parser.parseFromString(response, "text/html");
             let productCards = doc.querySelectorAll("li.product");
@@ -37,10 +37,10 @@
 
     };
     if(!setTabContent)
-    var setTabContent = async function setTabContent(tab_label, page_url, sort_by, widgetId) {
+    var setTabContent = async function setTabContent(tab_label, page_url, widgetId) {
         let tabContainer = document.querySelector(`#product-carousel-${widgetId} .productCarouselTabs [data-tab-name="${tab_label}"]`);
         let tabsContainer = document.querySelector(`#product-carousel-${widgetId} .productCarouselTabs`);
-        await GetCarouselProducts(page_url,tabContainer,sort_by);
+        await GetCarouselProducts(page_url,tabContainer);
         initializeVisibility(tabsContainer);
         bindTabButtons(widgetId);
     }
@@ -55,15 +55,13 @@
             }
             if(child.tagName === "UL" && tabs == 0) {
                 if(child.classList.contains('hidden')) {
-                    child.classList.add("loading");
                     child.classList.remove("hidden");
-                    slickFirstTab(child);
+                    slickFirstTab(carouselTabsContainer.parentNode.querySelector(".productCarouselTab"));
                 }
                 tabs++;
             }
         });
     }
-    if(!slickFirstTab)
     var slickFirstTab = function slickFirstTab(tab) {
         if(tab.querySelectorAll("article").length < 1) {
             setTimeout(slickFirstTab,100,tab)
@@ -71,9 +69,8 @@
         }
         let slicked = false;
         try {
-            jQueryTheme(tab).slick();
-            slicked = true;
-            tab.classList.remove("loading");
+        jQueryTheme(tab).slick();
+        slicked = true;
         } catch(e) {
             setTimeout(slickFirstTab,100,tab);
         }
@@ -91,8 +88,8 @@
         tabs.forEach(tab => {
             try {
                 if(tab.getAttribute("data-tab-name") === event.currentTarget.getAttribute("data-tab-name")) {
-                    jQueryTheme(tab).slick();
                     tab.classList.remove("hidden");
+                    jQueryTheme(tab).slick();
                     if(tab.getAttribute("data-initial-index") !== null) {
                         jQueryTheme(tab).slick('slickGoTo',tab.getAttribute("data-initial-index"))
                     }
@@ -110,7 +107,7 @@
     }
     document.addEventListener("DOMContentLoaded", (event) => {
         document.querySelectorAll("#product-carousel-{{_.id}} ul.productCarouselTab").forEach(element => {
-            setTabContent(element.getAttribute("data-tab-name"),element.getAttribute("data-page-url"),element.getAttribute("data-sort"),"{{_.id}}");
+            setTabContent(element.getAttribute("data-tab-name"),element.getAttribute("data-page-url"),"{{_.id}}");
         });
     });
 </script>
@@ -128,7 +125,7 @@
         <div class="container">
             <div class="productCarouselTabs">
                 {{#each tabs}}
-                <ul class="productCarouselTab hidden" data-tab-name="{{tab_label}}" data-page-url="{{page_url}}" data-sort="{{sort_by}}">
+                <ul class="productCarouselTab hidden" data-tab-name="{{tab_label}}" data-page-url="{{page_url}}">
 
                 </ul>
                 {{/each}}
@@ -193,15 +190,7 @@
         }
 
         .productCarouselTab.hidden {
-            display: none !important;
-        }
-
-        .productCarouselTab.loading {
-            visibility: hidden !important;
-
-            .card-buttons {
-                visibility: hidden !important;
-            }
+            display:none !important;
         }
     
     .productCarouselNavbar {
