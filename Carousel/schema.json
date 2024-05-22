@@ -14,13 +14,35 @@
             "settings": [
               {
                 "type": "input",
+                "id": "tab_label",
+                "label": "Tab Name"
+              },
+              {
+                "type": "input",
                 "id": "page_url",
                 "label": "Page URL"
               },
               {
-                "type": "input",
-                "id": "tab_label",
-                "label": "Tab Name"
+                "type": "select",
+                "id": "sort_by",
+                "label": "Sort By",
+                "default": "",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Best Selling",
+                      "value": "bestselling"
+                    },
+                    {
+                      "label": "New Products",
+                      "value": "newest"
+                    },
+                    {
+                      "label": "Default",
+                      "value": ""
+                    }
+                  ]
+                }
               },
               {
                 "type": "color",
