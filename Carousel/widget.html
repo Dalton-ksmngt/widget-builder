@@ -198,24 +198,6 @@
         flex-direction:row;
         justify-content: left;
         margin: 0 0 25px 0;
-
-        .carouselTabButton {
-            text-align: center;
-            width:20%;
-            height:30px;
-            border: 1px solid black;
-            border-radius:20px;
-            margin: 25px 25px;
-            color:white;
-
-            &:hover {
-                cursor: pointer;
-                animation: carouselNavbarButtonAnimation;
-                animation-duration: .5s;
-                animation-fill-mode: forwards;
-            }
-        }
-
     }
 
     .productCarouselTitle {
@@ -244,14 +226,29 @@
 
         {{#each tabs}}
             .carouselTabButton[data-tab-name="{{tab_label}}"] {
-                border-color: {{tab_button_color}};
                 background-color:{{tab_button_color}};
                 &:hover {
                     background-color:{{tab_button_hover}};
-                    border-color: {{tab_button_hover}};
                 }
             }
         {{/each}}
+
+        .carouselTabButton {
+            text-align: center;
+            width:{{button_width}}%;
+            height:{{button_height}}px;
+            border-radius:{{button_border_radius}}px;
+            margin: 25px 25px;
+            color:white;
+            align-content:center;
+
+            &:hover {
+                cursor: pointer;
+                animation: carouselNavbarButtonAnimation;
+                animation-duration: .5s;
+                animation-fill-mode: forwards;
+            }
+        }
     }
 
     @keyframes spin {

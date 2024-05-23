@@ -107,6 +107,21 @@
             "type": "number",
             "id": "subheader_font_size",
             "label": "Sub-header Font Size"
+          },
+          {
+            "type": "input",
+            "id": "button_width",
+            "label": "Tab Button Width(%)"
+          },
+          {
+            "type": "input",
+            "id": "button_height",
+            "label": "Tab Button Height(px)"
+          },
+          {
+            "type": "input",
+            "id": "button_border_radius",
+            "label": "Tab Button Border Radius(px)"
           }
         ]
       }
