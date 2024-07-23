@@ -55,6 +55,16 @@
                 "id": "tab_button_hover",
                 "label": "Button Hover Color",
                 "default": "#263178"
+              },
+              {
+                "type": "input",
+                "id": "tab_title_text",
+                "label": "Tab Title Text"
+              },
+              {
+                "type": "input",
+                "id": "tab_subtitle_text",
+                "label": "Tab Subtitle Text"
               }
             ]
           }
@@ -94,9 +104,9 @@
             "label": "Title"
           },
           {
-            "type": "number",
+            "type": "input",
             "id": "title_font_size",
-            "label": "Title Font Size"
+            "label": "Title Font Size (px)"
           },
           {
             "type": "text",
@@ -104,9 +114,9 @@
             "label": "Sub-header"
           },
           {
-            "type": "number",
+            "type": "input",
             "id": "subheader_font_size",
-            "label": "Sub-header Font Size"
+            "label": "Sub-header Font Size (px)"
           },
           {
             "type": "input",
@@ -122,6 +132,70 @@
             "type": "input",
             "id": "button_border_radius",
             "label": "Tab Button Border Radius(px)"
+          },
+          {
+            "type": "input",
+            "id": "button_font_size",
+            "label": "Tab Button Font Size(px)"
+          },
+          {
+            "type": "input",
+            "id": "button_font_weight",
+            "label": "Tab Button Font Weight"
+          },
+          {
+            "type": "alignment",
+            "id": "button_alignment",
+            "label": "Button Alignment",
+            "typeMeta": {
+              "display": "horizontal"
+            }
+          },
+          {
+            "type": "boxModel",
+            "label": "Title Margins (px)",
+            "id": "title_margins",
+            "default": {
+                "top": {
+                    "value": "0",
+                    "type": "px"
+                },
+                "right": {
+                    "value": "0",
+                    "type": "px"
+                },
+                "bottom": {
+                    "value": "0",
+                    "type": "px"
+                },
+                "left": {
+                    "value": "0",
+                    "type": "px"
+                }
+            }
+          },
+          {
+            "type": "boxModel",
+            "label": "Subtitle Margins (px)",
+            "id": "subtitle_margins",
+            "default": {
+                "top": {
+                    "value": "0",
+                    "type": "px"
+                },
+                "right": {
+                    "value": "0",
+                    "type": "px"
+                },
+                "bottom": {
+                    "value": "0",
+                    "type": "px"
+                },
+                "left": {
+                    "value": "0",
+                    "type": "px"
+                }
+            }
           }
         ]
       }
